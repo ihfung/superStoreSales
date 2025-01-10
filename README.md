@@ -17,7 +17,7 @@ This project focuses on analyzing sales data to uncover insights about revenue t
 
 **Format**: CSV file with encoding in latin1
 
-
+gi
 ## Tools and Technologies
 
 **Programming Language**: Python
