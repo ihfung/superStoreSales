@@ -30,7 +30,7 @@ df.dropna(inplace=True)  #inplace=True means the changes will be pernament on th
 
 #option 2
 #fill the missing / null values with values
-df['Order Date'].fillna(2020-03-19, inplace=True)
+#df['Order Date'].fillna('2020-03-19', inplace=True)
 
 #fix data types
 
