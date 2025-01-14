@@ -1,63 +1,143 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 #first we need to get the data as a csv, excel or json file
 #then look over the columns and understand the data 
 
 #read the csv file 
-df = pd.read_csv('super_store.csv', encoding='latin1') 
+data = pd.read_csv('super_store.csv', encoding='latin1') 
 
 #Explore the data 
 #see the frist few rows
-print(df.head())
+print(data.head())
 
 #view the columns
-print(df.columns)
+print(data.columns)
 
 #see the column with data types
-print(df.info())
+print(data.info())
 
 #check for any missing/ null values
-print(df.isnull().sum())
+print(data.isnull().sum())
 
 #summary of the data which shows the count, mean, std, min, max, 25%, 50%, 75%
-print(df.describe())
+print(data.describe())
 
 #Data Cleaning
 
 #option 1
 #drop any rows with missing or null values
-df.dropna(inplace=True)  #inplace=True means the changes will be pernament on the dataframe which is csv file
+data.dropna(inplace=True)  #inplace=True means the changes will be pernament on the dataframe which is csv file
 
 #option 2
 #fill the missing / null values with values
-#df['Order Date'].fillna('2020-03-19', inplace=True)
+#data['Order Date'].fillna('2020-03-19', inplace=True)
 
 #fix data types
 
 #date column convert to datetime format
-df['Order Date'] = pd.to_datetime(df['Order Date'])
-df['Ship Date'] = pd.to_datetime(df['Ship Date'])
+data['Order Date'] = pd.to_datetime(data['Order Date'])
+data['Ship Date'] = pd.to_datetime(data['Ship Date'])
 
 #remove duplicates
 
 #find duplicates
-df.duplicated()
+data.duplicated()
 
 #drop the duplicates
-df.drop_duplicates(inplace=True)
+data.drop_duplicates(inplace=True)
 
 #certain values in the columns will have to capitalize first letter
-df['Category'] = df['Category'].str.capitalize() 
+data['Category'] = data['Category'].str.capitalize() 
 
 #Anaylsis 
 
 #find the profit margin 
-df["Profit Margin %"] = (df["Profit"] / df["Sales"]) * 100
+data["Profit Margin %"] = (data["Profit"] / data["Sales"]) * 100 #data["profit margin"] is the name of the column that will be created
 
-print(df.head())
+print(data.head())
 
 #calculate discount impact 
-discount_analysis = df.groupby('Discount')[['Sales', 'Profit']].mean() #group by discount and calculate the mean of sales column and profit column that have the same discount 
+discountAnalysis = data.groupby('Discount')[['Sales', 'Profit']].mean() #group by discount and calculate the mean of sales column and profit column that have the same discount 
 
-print(discount_analysis)
+print(discountAnalysis)
+
+#how well is a product performing 
+#top product by sales
+topProduct = data.groupby('Product Name')['Sales'].sum().sort_values(ascending=False).head(10)
+
+print(topProduct)
+
+#top products by profit
+topProfit = data.groupby('Product Name')['Profit'].sum().sort_values(ascending=False).head(10)
+
+print(topProfit)
+
+#determine trends by the performance of the category or sub category
+
+categoryTrend = data.groupby('Category')['Sales'].sum()
+subCategoryTrend = data.groupby('Sub-Category')['Sales'].sum()
+
+print(categoryTrend)
+print(subCategoryTrend)
+
+#region revenue
+regionRevenue = data.groupby('Region')['Sales'].sum()
+print(regionRevenue)
+
+#region profit
+regionProfit = data.groupby('Region')['Profit'].sum()
+print(regionProfit)
+
+#state profit and sales
+stateProfitSales = data.groupby('State')[['Sales', 'Profit']].sum().sort_values('Sales', ascending=False).head(10) #['sales, profit'] calculate sum of each column which are sales and profit
+
+print(stateProfitSales)
+
+# Customer and Segment Analysis
+
+#segment Performance
+segmentPerformance = data.groupby('Segment')[['Sales', 'Profit']].sum()
+#top Customers by Sales:
+topCustomers = data.groupby('Customer Name')['Sales'].sum().sort_values(ascending=False).head(10)
+print(topCustomers)
+
+#Temporal Analysis
+
+# monthly sales trends
+data['Month'] = data['Order Date'].dt.month
+monthlySales = data.groupby('Month')['Sales'].sum()
+print(monthlySales)
+
+# yearly trends
+# extract year from Order Date
+data['Year'] = data['Order Date'].dt.year
+yearlySales = data.groupby('Year')['Sales'].sum()
+print(yearlySales)
+
+
+# shipping times
+# calculate shipping times to evaluate logistical efficiency
+data['Shipping Time (days)'] = (data['Ship Date'] - data['Order Date']).dt.days
+shippingTimes = data.groupby('Ship Mode')['Shipping Time (days)'].mean()
+print(shippingTimes)
+
+
+
+# discount against profit 
+
+#find the relationship between discount and profit:
+discountProfit = data.groupby('Discount')['Profit'].mean()
+print(discountProfit)
+
+
+#Visualize
+#top profit product in a bar graph
+topProfit = data.groupby('Product Name')['Profit'].sum().sort_values(ascending=False).head(10)
+topProfit.plot(kind='bar', figsize=(10, 6), title='Top 10 Products by Sales and Profit')
+plt.ylabel('Amount')
+plt.xlabel('Product Name')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
 
