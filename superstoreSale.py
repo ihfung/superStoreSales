@@ -141,3 +141,25 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 
+
+# totalSales = data['Sales'].sum()
+# print(totalSales)
+
+# totalProfit = data['Profit'].sum()
+# print(totalProfit)
+
+#overall profit margin
+overallProfitMargin = (data['Profit'].sum() / data['Sales'].sum()) * 100
+print(overallProfitMargin)
+
+#Line Plot: Monthly Sales Trends
+data['Month'] = data['Order Date'].dt.month #this will get the month from order date column and make as a month column with extract months
+topSales = data.groupby('Month')['Sales'].sum()
+
+topSales.plot(kind='line', figsize=(10, 6), title='Monthly Sales Trend')
+plt.ylabel('Sales')
+plt.xlabel('Months')
+plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+plt.grid()
+plt.tight_layout()
+plt.show()
