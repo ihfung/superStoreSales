@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 #first we need to get the data as a csv, excel or json file
 #then look over the columns and understand the data 
@@ -152,7 +153,7 @@ plt.show()
 overallProfitMargin = (data['Profit'].sum() / data['Sales'].sum()) * 100
 print(overallProfitMargin)
 
-#Line Plot: Monthly Sales Trends
+#Line Graph: Monthly Sales Trends
 data['Month'] = data['Order Date'].dt.month #this will get the month from order date column and make as a month column with extract months
 topSales = data.groupby('Month')['Sales'].sum()
 
@@ -163,3 +164,23 @@ plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 plt.grid()
 plt.tight_layout()
 plt.show()
+
+#Scatter Graph: Profit vs Discount
+#scatter graph but apparantly less clearer
+data.plot(kind='scatter', x='Discount', y='Profit', figsize=(10, 6), title='Profit vs Discount')
+plt.ylabel('Profit')
+plt.xlabel('Discount')
+plt.grid()
+plt.tight_layout()
+plt.show()
+
+#much more clear scatter plotted graph
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=data, x='Discount', y='Profit', alpha=0.7, color='blue', s=50)
+plt.title('Profit vs Discount')
+plt.xlabel('Discount')
+plt.ylabel('Profit')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
