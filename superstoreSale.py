@@ -176,7 +176,7 @@ plt.show()
 
 #much more clear scatter plotted graph
 plt.figure(figsize=(10, 6))
-sns.scatterplot(data=data, x='Discount', y='Profit', alpha=0.7, color='blue', s=50)
+sns.scatterplot(data=data, x='Discount', y='Profit', alpha=0.7, color='blue', s=50) #alpha is the transparency of the graph, color is the color of the graph, s is the size of the graph
 plt.title('Profit vs Discount')
 plt.xlabel('Discount')
 plt.ylabel('Profit')
